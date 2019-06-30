@@ -279,3 +279,51 @@ class KthLargest {
         return queue.peek();
     }
 }
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int x) {
+        val = x;
+    }
+}
+class  Two_Sum_BTS  {
+    public boolean findTarget(TreeNode root, int k) {
+        List <Integer> list = new ArrayList();
+        inorderTree(root, list);
+        int top = 0, bottom = list.size()-1;
+        while(top<bottom){
+            int sum = list.get(top) + list.get(bottom);
+            if(sum == k){
+                return true;
+            }
+            if(sum < k){
+                top++;
+            }
+            if(sum > k){
+                bottom--;
+            }
+        }
+        return false;
+    }
+    public void inorderTree(TreeNode root, List <Integer> list){
+        if(root != null){
+            inorderTree(root.left, list);
+            list.add(root.val);
+            inorderTree(root.right, list);
+        }else{
+            return;
+        }
+    }
+}
