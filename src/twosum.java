@@ -15,8 +15,72 @@ public class twosum {
 //        boolean param_2 = obj.insert(3);
 //        int param_31 = obj.getRandom();
 //        boolean param_21 = obj.remove(0);
-        int max = lengthOfLongestSubstring("au");
+//        int max = lengthOfLongestSubstring("au");
 
+//        int k = 3;
+//        int[] arr = {4,5,8,2};
+//        KthLargest kthLargest = new KthLargest(3, arr);
+//        kthLargest.add(3);   // returns 4
+//        kthLargest.add(5);   // returns 5
+        int[] coins = {2,5,10,1};
+        System.out.println(coinChange0(coins, 27));
+    }
+    static int coinChange(int[] coins, int amount) {
+        Arrays.sort(coins);
+        int[] dp = new int[amount+1];
+        Arrays.fill(dp, 9999);
+        dp[0] = 0;
+        for (int i = 1; i < amount+1; i++) {
+            if(i < coins[0]){
+                dp[i] = -1;
+            }else{
+                for (int coin: coins) {
+                    if(i == coin){
+                        dp[i] = 1;
+                    }else if(i > coin && dp[i-coin] != -1){
+                        int result = dp[i-coin] + dp[coin];
+                        if(result<=dp[i]){
+                            dp[i] = result;
+                        }
+                    }
+                }
+            }
+        }
+        if(dp[amount] == 9999){
+            dp[amount] = -1;
+        }
+        return dp[amount];
+
+    }
+
+    static int coinChange0(int[] coins, int amount){
+        Arrays.sort(coins);
+        int minSofar = Integer.MAX_VALUE;    // carray the minimum number of coins
+        return coinChange_helper(coins, minSofar, coins.length-1, amount, 0);
+
+    }
+
+    static int coinChange_helper(int[] coins, int minSofar, int idxCoin, int amount, int prevCount){
+        int maxCount = amount/coins[idxCoin];
+        if(amount % coins[idxCoin] == 0){
+            return prevCount+maxCount;
+        }
+        if(idxCoin==0){
+            return -1;
+        }
+
+        for (int i = maxCount; i >=0; i--) {
+            int newAmount = amount-i*coins[idxCoin];
+            int newCount = i + prevCount;
+            int nextCoin = coins[idxCoin-1];
+            if( newCount + (newAmount + nextCoin - 1 ) / nextCoin < minSofar){   // (newAmount + nextCoin - 1 ) / nextCoin is used for ceiling the result of division
+                int res = coinChange_helper(coins, minSofar, idxCoin-1, newAmount, newCount);
+                if(res!=-1){
+                    minSofar = Math.min(res, minSofar);     // update minSofar when we a solution to make a change
+                }
+            }
+        }
+        return minSofar == Integer.MAX_VALUE? -1: minSofar;
     }
 
     static int lengthOfLongestSubstring(String s) {
