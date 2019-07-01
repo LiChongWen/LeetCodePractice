@@ -22,6 +22,9 @@ public class twosum {
 //        KthLargest kthLargest = new KthLargest(3, arr);
 //        kthLargest.add(3);   // returns 4
 //        kthLargest.add(5);   // returns 5
+        String[] words = {"i", "love", "leetcode", "i", "love", "coding"};
+        List<String> frequency =  topKFrequent(words, 2);
+
         MinStack minStack = new MinStack();
         minStack.push(-2);
         minStack.push(0);
@@ -203,6 +206,22 @@ public class twosum {
             }
         }
         return head.next;
+    }
+
+    static List<String> topKFrequent(String[] words, int k) {
+        HashMap<String, Integer> set = new HashMap<>();
+        for (String word: words) {
+            if(set.containsKey(word)){
+                set.put(word, set.get(word)+1);
+            }else{
+                set.put(word,1);
+            }
+        }
+        List<String> candidates = new ArrayList(set.keySet());
+        Collections.sort(candidates,(w1,w2) ->
+                        set.get(w1).equals(set.get(w2))?
+                        w1.compareTo(w2) : set.get(w2) - set.get(w1));
+        return candidates.subList(0,k);
     }
 }
 
