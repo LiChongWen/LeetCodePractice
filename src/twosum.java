@@ -22,10 +22,23 @@ public class twosum {
 //        KthLargest kthLargest = new KthLargest(3, arr);
 //        kthLargest.add(3);   // returns 4
 //        kthLargest.add(5);   // returns 5
+        MinStack minStack = new MinStack();
+        minStack.push(-2);
+        minStack.push(0);
+        minStack.push(-3);
+
+
+        int min = minStack.getMin();
+        minStack.pop();
+        int top = minStack.top();
+        min = minStack.getMin();
+
+
         De_serialize_BST x = new De_serialize_BST();
         x.deserialize("8,3,1,6,4,7,10,14,13");
         int[] coins = {2,5,10,1};
         System.out.println(coinChange0(coins, 27));
+
     }
     static int coinChange(int[] coins, int amount) {
         Arrays.sort(coins);
@@ -366,5 +379,38 @@ class  Two_Sum_BTS  {
         }else{
             return;
         }
+    }
+}
+
+class MinStack {
+    Stack<Integer> stack;
+    int min = Integer.MAX_VALUE;
+
+    /** initialize your data structure here. */
+    public MinStack() {
+        stack  = new Stack<>();
+
+    }
+    public void push(int x) {
+        if(x <= min){
+            stack.push(min);
+            min = x;
+        }
+        stack.push(x);
+    }
+
+    public void pop() {
+        int peek = stack.pop();
+        if(peek == min){
+            min = stack.pop();
+        }
+    }
+
+    public int top() {
+        return stack.peek();
+    }
+
+    public int getMin() {
+        return min;
     }
 }
