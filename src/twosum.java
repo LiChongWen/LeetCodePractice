@@ -22,6 +22,8 @@ public class twosum {
 //        KthLargest kthLargest = new KthLargest(3, arr);
 //        kthLargest.add(3);   // returns 4
 //        kthLargest.add(5);   // returns 5
+        De_serialize_BST x = new De_serialize_BST();
+        x.deserialize("8,3,1,6,4,7,10,14,13");
         int[] coins = {2,5,10,1};
         System.out.println(coinChange0(coins, 27));
     }
@@ -279,7 +281,46 @@ class KthLargest {
         return queue.peek();
     }
 }
+class De_serialize_BST {
 
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        if(root == null) return "null";
+        Stack<TreeNode> st= new Stack<>();
+        st.push(root);
+        while (!st.empty()){
+            root = st.pop();
+            sb.append(root.val).append(",");
+            if(root.right != null) st.push(root.right);
+            if(root.left != null) st.push(root.left);
+        }
+        return sb.toString();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if(data.length() == 0) return null;
+        String[] strA = data.split(",");
+
+        Queue<Integer> q= new LinkedList<Integer>();
+        for (String nums: strA){
+            q.offer(Integer.parseInt(nums));
+        }
+        return getNode(q);
+    }
+    public TreeNode getNode(Queue<Integer> q){
+        if(q.isEmpty()) return null;
+        TreeNode root = new TreeNode(q.poll());
+        Queue<Integer> smallerPart = new LinkedList<>();
+        while (!q.isEmpty() && q.peek()<root.val){
+            smallerPart.add(q.poll());
+        }
+        root.left = getNode(smallerPart);
+        root.right = getNode(q);
+        return root;
+    }
+}
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
