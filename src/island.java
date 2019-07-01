@@ -6,9 +6,56 @@ import java.util.Set;
  */
 public class island {
     public static void main(String[] args) {
-
+        int[][] edges = new int[][]{
+                {0,0,1,0,0,0,0,1,0,0,0,0,0},
+                {0,0,0,0,0,0,0,1,1,1,0,0,0},
+                {0,1,1,0,1,0,0,0,0,0,0,0,0},
+                {0,1,0,0,1,1,0,0,1,0,1,0,0},
+                {0,1,0,0,1,1,0,0,1,1,1,0,0},
+                {0,0,0,0,0,0,0,0,0,0,1,0,0},
+                {0,0,0,0,0,0,0,1,1,1,0,0,0},
+                {0,0,0,0,0,0,0,1,1,0,0,0,0}
+        };
+        //numIslands2(edges);
+        maxAreaOfIsland(edges);
     }
 
+
+    static int maxAreaOfIsland(int[][] grid) {
+        int result=0;
+        for(int i = 0; i < grid.length; i++){
+            for(int j = 0; j < grid[0].length; j++){
+                if(grid[i][j] == 1){
+                    int temp = DFS_area(grid, i, j);
+                    if(temp > result){
+                        result = temp;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    static int DFS_area(int[][] grid, int row, int col){
+        grid[row][col] = 0;
+        int temp = 1;
+        int a=0,b=0,c=0,d=0;
+        if(col+1<grid[0].length && grid[row][col+1] != 0){
+            a = DFS_area(grid, row, col+1);
+        }
+        if(col-1>=0 && grid[row][col-1] != 0){
+            b = DFS_area(grid, row, col-1);
+        }
+
+        if(row+1<grid.length && grid[row+1][col] != 0){
+            c = DFS_area(grid,row+1, col);
+        }
+        if(row-1>=0 && grid[row-1][col] != 0){
+            d = DFS_area(grid,row-1, col);
+        }
+        temp = temp + a + b + c + d;
+        return temp;
+    }
 
     static int numIslands(char[][] grid) {
 //        Boolean[][] visited = new Boolean[grid.length][grid[0].length];
@@ -47,7 +94,7 @@ public class island {
         }
 
     }
-    int numIslands2(char[][] grid) {
+    static int numIslands2(int[][] grid) {
 
         int[][] distance = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
         if (grid == null || grid.length == 0 || grid[0].length == 0) {
@@ -58,11 +105,11 @@ public class island {
         UnionFindSet u = new UnionFindSet(grid);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if (grid[i][j] == '1') {
+                if (grid[i][j] == 1) {
                     for (int[] d : distance) {
                         int x = i + d[0];
                         int y = j + d[1];
-                        if (x >= 0 && x < rows && y >= 0 && y < cols && grid[x][y] == '1') {
+                        if (x >= 0 && x < rows && y >= 0 && y < cols && grid[x][y] == 1) {
                             int first = i * cols + j;
                             int second = x * cols + y;
                             u.Union(first, second);
@@ -74,13 +121,14 @@ public class island {
         Set<Integer> island = new HashSet<Integer>();
         for (int i = 0; i < rows; i++) {
             for(int j = 0; j<cols; j++){
-                if (grid[i][j] == '1'){
+                if (grid[i][j] == 1){
                     u.Find(i*cols+j);
                 }
             }
         }
         for (int i = 0; i <= rows * cols; i++) {
             island.add(u.parents[i]);
+
         }
         return island.size()-1;
     }
@@ -91,14 +139,14 @@ class UnionFindSet {
     int[] parents;
     int[] rank;
 
-    public UnionFindSet(char[][] grid){
+    public UnionFindSet(int[][] grid){
         int row = grid.length;
         int col = grid[0].length;
         parents = new int[row*col+1];
         rank = new int[row*col+1];
         for(int i = 0; i<row; i++){
             for(int j = 0; j < col; j++){
-                if (grid[i][j] == '1') {
+                if (grid[i][j] == 1) {
                     parents[i*col+j] = i*col + j;
                     rank[i*col+j] = i*col + j;
                 }else{
