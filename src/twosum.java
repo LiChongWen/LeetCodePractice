@@ -22,26 +22,68 @@ public class twosum {
 //        KthLargest kthLargest = new KthLargest(3, arr);
 //        kthLargest.add(3);   // returns 4
 //        kthLargest.add(5);   // returns 5
-        String[] words = {"i", "love", "leetcode", "i", "love", "coding"};
-        List<String> frequency =  topKFrequent(words, 2);
 
-        MinStack minStack = new MinStack();
-        minStack.push(-2);
-        minStack.push(0);
-        minStack.push(-3);
+//        String s = "012345";
+//        s = s.substring(0,5);
+//        int[][] board = {   {1,1,-1},
+//                            {1,1,1},
+//                            {-1,1,1}};
+//
+//        snakesAndLadders(board);
+//        String[] words = {"i", "love", "leetcode", "i", "love", "coding"};
+//        List<String> frequency =  topKFrequent(words, 2);
+//
+//        MinStack minStack = new MinStack();
+//        minStack.push(-2);
+//        minStack.push(0);
+//        minStack.push(-3);
+//
+//
+//        int min = minStack.getMin();
+//        minStack.pop();
+//        int top = minStack.top();
+//        min = minStack.getMin();
+//
+//
+//        De_serialize_BST x = new De_serialize_BST();
+//        x.deserialize("8,3,1,6,4,7,10,14,13");
+//        int[] coins = {2,5,10,1};
+//        System.out.println(coinChange0(coins, 27));
 
+        List<String> wordDict = new ArrayList<>();
+        wordDict.add("apple");
+        wordDict.add("pen");
+        wordDict.add("applepen");
+        wordDict.add("pine");
+        wordDict.add("pineapple");
 
-        int min = minStack.getMin();
-        minStack.pop();
-        int top = minStack.top();
-        min = minStack.getMin();
+        List<String> set = wordBreak("pineapplepenapple", wordDict);
 
+    }
+    static List<String> wordBreak(String s, List<String> wordDict) {
+        return  wordBreakHelper(s, wordDict,new HashMap<String, LinkedList<String>>());
+    }
+    static List<String>  wordBreakHelper(String s, List<String> wordDict, HashMap<String, LinkedList<String>>map){
+        if(map.containsKey(s)){
+            return map.get(s);
+        }
 
-        De_serialize_BST x = new De_serialize_BST();
-        x.deserialize("8,3,1,6,4,7,10,14,13");
-        int[] coins = {2,5,10,1};
-        System.out.println(coinChange0(coins, 27));
-
+        LinkedList<String> res = new LinkedList<>();
+        if(s.length() == 0){
+            res.add("");
+            return res;
+        }
+        for (String word: wordDict) {
+            if(s.startsWith(word)){
+                List<String> sublist = wordBreakHelper(s.substring(word.length()),wordDict,map);
+                for (String sub: sublist) {
+                    res.add(word + (sub.isEmpty()? "" : " ") + sub);
+                }
+            }
+        }
+        map.put(s, res);
+        return res;
+       // return "";
     }
     static int coinChange(int[] coins, int amount) {
         Arrays.sort(coins);
@@ -222,6 +264,50 @@ public class twosum {
                         set.get(w1).equals(set.get(w2))?
                         w1.compareTo(w2) : set.get(w2) - set.get(w1));
         return candidates.subList(0,k);
+    }
+
+    static int snakesAndLadders(int[][] board) {
+        int n = board.length;
+        int[] arr = new int[n*n];
+        int j=0, index=0, inc = 1, i = n-1;
+        while(index < n*n){
+            arr[index++] = board[i][j];
+            if(inc == 1 && j == n-1){
+                inc = -1;
+                i--;
+            }else if(inc == -1 && j==0){
+                inc = 1;
+                i--;
+            }else{
+                j = j + inc;
+            }
+        }
+        boolean[] visited = new boolean[n*n];
+        Queue<Integer> q = new LinkedList<>();
+        int start = arr[0] > -1? arr[0] - 1 : 0;
+        q.offer(start);
+        visited[start] = true;
+        int step = 0;
+
+        while(!q.isEmpty()){
+            int size = q.size();
+            while(size != 0){
+                int currentPos = q.poll();
+                if(currentPos == n*n-1){
+                    return step;
+                }
+                for(int next = currentPos+1; next <= Math.min(currentPos+6, n*n-1); next++){
+                    int destination = arr[next] > -1 ? arr[next]-1 : next;
+                    if(!visited[destination]){
+                        visited[destination] = true;
+                        q.offer(destination);
+                    }
+                }
+                size--;
+            }
+            step++;
+        }
+        return -1;
     }
 }
 
