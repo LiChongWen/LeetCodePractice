@@ -51,15 +51,47 @@ public class twosum {
 //        System.out.println(coinChange0(coins, 27));
 
         List<String> wordDict = new ArrayList<>();
-        wordDict.add("apple");
-        wordDict.add("pen");
-        wordDict.add("applepen");
-        wordDict.add("pine");
-        wordDict.add("pineapple");
+        wordDict.add("leet");
+        wordDict.add("code");
+        boolean pass = false;
 
-        List<String> set = wordBreak("pineapplepenapple", wordDict);
+        System.out.println(wordBreak1("leetcode", wordDict, false));
+    }
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        PriorityQueue<ListNode> queue = new PriorityQueue<ListNode>(2, ((o1, o2) -> o1.val-o2.val));
+
+        queue.add(l1);
+        queue.add(l2);
+
+        ListNode head = new ListNode(0);
+        ListNode tail = head;
+        while (!queue.isEmpty()){
+            tail.next = queue.poll();
+            tail = tail.next;
+
+            if(tail.next != null){
+                queue.add(tail.next);
+            }
+        }
+        return head.next;
 
     }
+
+    static boolean wordBreak1(String s, List<String> wordDict, boolean res) {
+        boolean pass[] = new boolean[s.length()+1];
+        pass[0] = true;
+
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if(pass[j] && wordDict.contains(s.substring(j, i))){
+                    pass[i] = true;
+                    break;
+                }
+            }
+        }
+        return pass[s.length()];
+    }
+
     static List<String> wordBreak(String s, List<String> wordDict) {
         return  wordBreakHelper(s, wordDict,new HashMap<String, LinkedList<String>>());
     }
