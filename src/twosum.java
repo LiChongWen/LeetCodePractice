@@ -50,12 +50,56 @@ public class twosum {
 //        int[] coins = {2,5,10,1};
 //        System.out.println(coinChange0(coins, 27));
 
-        List<String> wordDict = new ArrayList<>();
-        wordDict.add("leet");
-        wordDict.add("code");
-        boolean pass = false;
+//        List<String> wordDict = new ArrayList<>();
+//        wordDict.add("leet");
+//        wordDict.add("code");
+//        boolean pass = false;
+//
+//        System.out.println(wordBreak1("leetcode", wordDict, false));
+        //System.out.println(firstUniqChar("loveleetcode"));
+        char[] x = {'a', 'b'};
+        x[0] = '\0';
 
-        System.out.println(wordBreak1("leetcode", wordDict, false));
+        int[] a = {6,3,4,2,7,5};
+        quickSort(a, 0, 5);
+        System.out.println("---");
+    }
+
+    static void quickSort(int a[],int l,int r){
+        if(l>=r)
+            return;
+
+        int i = l; int j = r; int key = a[l];//选择第一个数为key
+
+        while(i<j){
+
+            while(i<j && a[j]>=key)//从右向左找第一个小于key的值
+                j--;
+            if(i<j){
+                a[i] = a[j];
+                i++;
+            }
+
+            while(i<j && a[i]<key)//从左向右找第一个大于key的值
+                i++;
+
+            if(i<j){
+                a[j] = a[i];
+                j--;
+            }
+        }
+        //i == j
+        a[i] = key;
+        quickSort(a, l, i-1);//递归调用
+        quickSort(a, i+1, r);//递归调用
+    }
+
+    static int firstUniqChar(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if(s.lastIndexOf(s.charAt(i)) == s.indexOf(s.charAt(i))) return i;
+        }
+        return -1;
+
     }
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         PriorityQueue<ListNode> queue = new PriorityQueue<ListNode>(2, ((o1, o2) -> o1.val-o2.val));
@@ -96,6 +140,7 @@ public class twosum {
         return  wordBreakHelper(s, wordDict,new HashMap<String, LinkedList<String>>());
     }
     static List<String>  wordBreakHelper(String s, List<String> wordDict, HashMap<String, LinkedList<String>>map){
+
         if(map.containsKey(s)){
             return map.get(s);
         }
