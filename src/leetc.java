@@ -1,19 +1,61 @@
+import java.util.HashMap;
+import java.util.Stack;
+
 /**
  * Created by liarthur on 2019/7/6.
  */
 public class leetc {
     public static void main(String[] args) {
-        char[][] board = {
-                {'A','B', 'C', 'E'},
-                {'S','F', 'E', 'S'},
-                {'A','D', 'E', 'E'}
-                                };
-        String word = "ABCESEEEFS";
-        boolean pass = exist(board, word);
+//        char[][] board = {
+//                {'A','B', 'C', 'E'},
+//                {'S','F', 'E', 'S'},
+//                {'A','D', 'E', 'E'}
+//                                };
+//        String word = "ABCESEEEFS";
+//        boolean pass = exist(board, word);
+//        System.out.println(pass);
+        String s = "0123";
+        String subs = s.substring(0,1);
+        HashMap<Character, Character> map = new HashMap<>();
+        map.put( ')', '(');
+        map.put( '}', '{');
+        map.put( ']' ,'[' );
+        boolean pass = isValid("(()]");
         System.out.println(pass);
     }
+    static boolean isValid(String s) {
+        Stack<Character> stack = new Stack<Character>();
+        for (char c : s.toCharArray()) {
+            if (c == '(')
+                stack.push(')');
+            else if (c == '{')
+                stack.push('}');
+            else if (c == '[')
+                stack.push(']');
+            else if (stack.isEmpty() || stack.pop() != c)
+                return false;
+        }
+        return stack.isEmpty();
+    }
 
+    static boolean isValid(String s, HashMap<Character, Character> map) {
+        //char[] brackets = {'(', ')', '{', '}', '[', ']'};
+        if(s.length() % 2 != 0) return false;
+        if(s.length() == 0) return true;
 
+        for(int i = 0; i<s.length(); i++){
+            if(map.containsKey(s.charAt(i))){
+                if(i > 0){
+                    if(s.charAt(i-1) == map.get(s.charAt(i))){
+                        if(isValid(s.substring(0,i-1) + s.substring(i+1), map)){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     static boolean exist(char[][] board, String word) {
         boolean result = false;
