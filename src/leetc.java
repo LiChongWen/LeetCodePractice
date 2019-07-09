@@ -14,14 +14,71 @@ public class leetc {
 //        String word = "ABCESEEEFS";
 //        boolean pass = exist(board, word);
 //        System.out.println(pass);
-        String s = "0123";
-        String subs = s.substring(0,1);
-        HashMap<Character, Character> map = new HashMap<>();
-        map.put( ')', '(');
-        map.put( '}', '{');
-        map.put( ']' ,'[' );
-        boolean pass = isValid("(()]");
-        System.out.println(pass);
+//        String s = "0123";
+//        int x = 13;
+//
+//        String subs = s.substring(0,1);
+//        HashMap<Character, Character> map = new HashMap<>();
+//        map.put( ')', '(');
+//        map.put( '}', '{');
+//        map.put( ']' ,'[' );
+//        boolean pass = isValid("(()]");
+//        System.out.println(pass);
+        int[] nums = {4,5,6,7,0,1,2};
+       // productExceptSelf(nums);
+        search(nums, 3);
+    }
+    static int search(int[] nums, int target) {
+        int size = nums.length;
+        int i = 0, start = 0, end = size-1;
+        while(start < end){
+            int mid = start + (end-start)/2;
+            if(nums[mid] > nums[end]) start = mid+1;
+            else end = mid;
+        }
+
+        int min = start;
+
+        if(target == nums[min]) return min;
+        end = target>nums[size-1] ? min : size-1;
+        start = target<=nums[size-1] ? min : 0;
+
+        while(start <= end){
+            int mid = start + (end-start)/2;
+            if(target == nums[mid]) return mid;
+            if(target > nums[mid]) start = mid+1;
+            else end = mid-1;
+        }
+        return -1;
+    }
+    static int[] productExceptSelf(int[] nums) {
+        int[] left = new int[nums.length];
+        left[0] = 1;
+        int right =1;
+
+        for(int i = 1; i < nums.length; i++){
+            left[i] = left[i-1] * nums[i-1];
+        }
+
+        for(int i = nums.length-1; i >= 0; i--){
+            left[i] = right * left[i];
+            right = right * nums[i];
+        }
+        return left;
+    }
+
+    public String intToRoman(int num) {
+        String anwser = "";
+        String[] symbols = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+        int[] numbers = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+
+        for (int i = 0; i < symbols.length; i++) {
+            while (num >= numbers[i]) {
+                num -= numbers[i];
+                anwser = anwser + symbols[i];
+            }
+        }
+        return anwser;
     }
     static boolean isValid(String s) {
         Stack<Character> stack = new Stack<Character>();
