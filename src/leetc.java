@@ -1,5 +1,4 @@
-import java.util.HashMap;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Created by liarthur on 2019/7/6.
@@ -24,9 +23,87 @@ public class leetc {
 //        map.put( ']' ,'[' );
 //        boolean pass = isValid("(()]");
 //        System.out.println(pass);
-        int[] nums = {4,5,6,7,0,1,2};
-       // productExceptSelf(nums);
-        search(nums, 3);
+
+//        int[] nums = {4,5,6,7,0,1,2};
+//       // productExceptSelf(nums);
+//        TreeNode root = new TreeNode(3);
+//
+//
+//        TreeNode five = new TreeNode(5);
+//        TreeNode one = new TreeNode(1);
+//        TreeNode six = new TreeNode(6);
+//        TreeNode two = new TreeNode(2);
+//        TreeNode zero = new TreeNode(0);
+//        TreeNode eight = new TreeNode(8);
+//        root.left = five;
+//        root.right = one;
+//        five.left = six;
+//        five.right = two;
+//        one.left = zero;
+//        one.right = eight;
+//        lowestCommonAncestor(root, five, two);
+        int[][] x = {{-1,4,7,11,15},
+                     {2,5,8,12,19},
+                     {3,6,9,16,22},
+                     {10,13,14,17,24},
+                     {18,21,23,26,30}};
+        searchMatrix(x, 5);
+
+    }
+    static boolean searchMatrix(int[][] matrix, int target) {
+        if(matrix == null || matrix.length < 1 || matrix[0].length <1) {
+            return false;
+        }
+        int rows = matrix.length;
+        int cols = matrix[0].length-1;
+        rows = 0;
+        while( rows < matrix.length && cols >= 0){
+            if(matrix[rows][cols] == target) return true;
+            else if(matrix[rows][cols] > target) cols--;
+            else rows++;
+        }
+        return false;
+    }
+    static TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+
+        if (root == null || root == p || root == q) return root;
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        return left == null ? right : right == null ? left : root;
+    }
+    static TreeNode lowestCommonAncestor1(TreeNode root, TreeNode p, TreeNode q) {
+        Queue<TreeNode> Q = new LinkedList<>();
+        HashMap<Integer, TreeNode> map = new HashMap<>();
+        Q.offer(root);
+        int ground = 1;
+        root.level = ground;
+        while(!Q.isEmpty()){
+            TreeNode node = Q.poll();
+
+            if(node.left != null){
+                node.left.level = node.level+1;
+                map.put(node.left.val, node);
+                Q.offer(node.left);
+            }
+            if(node.right != null){
+                node.right.level = node.level+1;
+                map.put(node.right.val, node);
+                Q.offer(node.right);
+            }
+        }
+
+        while(p.level > q.level){
+            p = map.get(p.val);
+        }
+        while(q.level > p.level){
+            q = map.get(q.val);
+        }
+        while(p.val != q.val){
+            p = map.get(p.val);
+            q = map.get(q.val);
+        }
+        return p;
+
     }
     static int search(int[] nums, int target) {
         int size = nums.length;

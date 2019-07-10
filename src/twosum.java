@@ -527,6 +527,7 @@ class De_serialize_BST {
  */
 class TreeNode {
     int val;
+    int level;
     TreeNode left;
     TreeNode right;
 
