@@ -42,13 +42,124 @@ public class leetc {
 //        one.left = zero;
 //        one.right = eight;
 //        lowestCommonAncestor(root, five, two);
-        int[][] x = {{-1,4,7,11,15},
-                     {2,5,8,12,19},
-                     {3,6,9,16,22},
-                     {10,13,14,17,24},
-                     {18,21,23,26,30}};
-        searchMatrix(x, 5);
 
+//        int[][] x = {{-1,4,7,11,15},
+//                     {2,5,8,12,19},
+//                     {3,6,9,16,22},
+//                     {10,13,14,17,24},
+//                     {18,21,23,26,30}};
+//        searchMatrix(x, 5);
+
+//        String s = "012345";
+//        String[] sa = {"1", "2"};
+//        s.contains("23");
+//        s = s.substring(1,1+2);
+//        Stack<Character> a = new Stack<>();
+//
+//        int[][] x = {{0,0,0},
+//                {0,1,1}};
+//
+//        x = floodFill(x,1,1,2);
+//        int[] x = {-1,0,0,0,0,3,3};
+//        removeDuplicates(x);
+        countAndSay(5);
+
+    }
+    static String countAndSay(int n) {
+        if(n == 1) return "1";
+        String x = "1";
+        for(int i = 1 ; i < n; i++){
+            x = count(x);
+        }
+        return x;
+    }
+    static String count(String num){
+        String result="";
+        int size = num.length();
+        if(size == 1) return "1"+num;
+        for(int i = 0; i< size; i++){
+            int number = 1;
+            while(i+1<size && num.charAt(i+1) == num.charAt(i)){
+                if(i+1<size){
+                    i++;
+                    number++;
+                }else
+                    break;
+            }
+            String x = (String.valueOf(number) + num.charAt(i));
+            result += x;
+        }
+        return result;
+    }
+    static int removeDuplicates(int[] nums) {
+        int size = nums.length;
+        int result = 1;
+        if(size < 3) return size;
+        int j = 1;
+        for(int i = 0; i < size; i++){
+            if(j<size){
+                while(nums[j] == nums[i]){
+                    if(j<size-1){
+                        j++;
+                    }else{
+                        break;
+                    }
+                }
+                if(nums[j] != nums[i]){
+                    nums[i+1] = nums[j++];
+                    result++;
+                }else if(j == size-1){
+                    break;
+                }
+            }
+
+        }
+        return result;
+    }
+    static boolean isValid2(String s) {
+        Stack<Character> stack = new Stack<>();
+        if( s.length() == 0 || s.charAt(0) != '(' && s.charAt(0) != '[' && s.charAt(0) != '{'){
+            return false;
+        }
+        for(int i = 0; i < s.length(); i++){
+            if(s.charAt(i) == '('){
+                stack.push(')');
+            }else if(s.charAt(i) == '['){
+                stack.push(']');
+            }else if(s.charAt(i) == '{'){
+                stack.push('}');
+            }else if(s.charAt(i) != stack.pop()){
+                return false;
+            }
+        }
+        return true;
+    }
+    public ListNode detectCycle(ListNode head) {
+        ListNode slow = head, fast = head;
+        while(fast != null && fast.next != null){
+            fast = fast.next.next;
+            slow = slow.next;
+            if(fast == slow) {
+                fast = head;
+                while(fast != slow){
+                    fast = fast.next;
+                    slow = slow.next;
+                }
+                return fast;
+            }
+        }
+
+        return null;
+    }
+    static int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+        if(image[sr][sc] == newColor) return image;
+        int oldColor = image[sr][sc];
+        image[sr][sc] = newColor;
+        if(sr-1>=0 && image[sr-1][sc] == oldColor) floodFill(image, sr-1, sc, newColor);
+        if(sr+1<=image.length-1 && image[sr+1][sc] == oldColor) floodFill(image, sr+1, sc, newColor);
+        if(sc-1>=0 && image[sr][sc-1] == oldColor) floodFill(image, sr, sc-1, newColor);
+        if(sc+1<=image[0].length-1 && image[sr][sc+1] == oldColor) floodFill(image, sr, sc+1, newColor);
+        return image;
     }
     static boolean searchMatrix(int[][] matrix, int target) {
         if(matrix == null || matrix.length < 1 || matrix[0].length <1) {
